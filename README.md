@@ -12,5 +12,6 @@ Trabalho do Grupo 1 FIAP 4ASOO
 ## Execução
 
 ```cmd
+docker run --rm --name pagamentos-db -e POSTGRES_USER=pagamentos -e POSTGRES_PASSWORD=password -e POSTGRES_DB=pagamentos -p 5432:5432 -d postgres:13-alpine
 mvn clean quarkus:dev
 ```
