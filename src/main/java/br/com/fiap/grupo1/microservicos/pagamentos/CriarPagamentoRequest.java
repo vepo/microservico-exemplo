@@ -26,6 +26,18 @@ public class CriarPagamentoRequest {
 	@Positive(message = "Id do recebedor inválido")
 	private Long idRecebedor;
 
+	public CriarPagamentoRequest() {
+	}
+
+	public CriarPagamentoRequest(
+			@NotNull(message = "Valor é um campo obrigatório") @Positive(message = "Pagamento não pode ser negativo") BigDecimal valor,
+			@NotNull(message = "Id do pagador é um campo obrigatório") @Positive(message = "Id do pagador inválido") Long idPagador,
+			@NotNull(message = "Id do recebedor é um campo obrigatório") @Positive(message = "Id do recebedor inválido") Long idRecebedor) {
+		this.valor = valor;
+		this.idPagador = idPagador;
+		this.idRecebedor = idRecebedor;
+	}
+
 	public BigDecimal getValor() {
 		return valor;
 	}
