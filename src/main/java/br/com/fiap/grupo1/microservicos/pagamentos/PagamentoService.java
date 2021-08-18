@@ -1,4 +1,4 @@
-package br.com.fiap.grupo1.microservicos;
+package br.com.fiap.grupo1.microservicos.pagamentos;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

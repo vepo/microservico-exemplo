@@ -1,15 +1,26 @@
-package br.com.fiap.grupo1.microservicos;
+package br.com.fiap.grupo1.microservicos.pagamentos;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Objects;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+@Schema(name = "Pagamento", description = "Detalha todos os campos de um pagamento.")
 public class PagamentoResponse {
+	@Schema(description = "Identificador único do pagamento")
 	private Long id;
+	
+	@Schema(description = "Valor registrado do pagamento")
 	private BigDecimal valor;
+	
+	@Schema(description = "Indentificador do pagador")
 	private Long idPagador;
+	
+	@Schema(description = "Indentificador do recebedor")
 	private Long idRecebedor;
-	private Timestamp timestamp;
+	
+	@Schema(description = "Timestamp de confirmação da operação")
+	private long timestamp;
 
 	public Long getId() {
 		return id;
@@ -43,11 +54,11 @@ public class PagamentoResponse {
 		this.idRecebedor = idRecebedor;
 	}
 
-	public Timestamp getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 
