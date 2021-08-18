@@ -63,9 +63,16 @@ Para criar imagem docker
 mvn clean package -Dquarkus.container-image.build=true
 ```
 
-
 ## Postman
 
 Para acessar os testes no Postman, use o link: https://www.getpostman.com/collections/efca6b85e988bf45810e
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/efca6b85e988bf45810e?action=collection%2Fimport)
+
+## Limitações
+
+Esse exemplo não consta com:
+
+* Testes unitários
+* Testes de integração
+* Serviço de mensageria
