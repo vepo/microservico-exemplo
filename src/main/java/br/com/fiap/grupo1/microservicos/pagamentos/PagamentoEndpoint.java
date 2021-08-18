@@ -19,6 +19,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.quarkus.panache.common.Page;
 import io.smallrye.mutiny.Multi;
@@ -28,6 +30,8 @@ import io.smallrye.mutiny.Uni;
 @ApplicationScoped
 public class PagamentoEndpoint {
 
+	private static final Logger logger = LoggerFactory.getLogger(PagamentoEndpoint.class);
+	
 	@Inject
 	PagamentoService pagamentoService;
 
@@ -49,6 +53,7 @@ public class PagamentoEndpoint {
 	public Multi<PagamentoResponse> listarPagamentos(
 			@Parameter(description = "Índice da página de resultados.", required = false, schema = @Schema(type = SchemaType.INTEGER)) @QueryParam("index") @DefaultValue("0") int index,
 			@Parameter(description = "Tamanho da página de resultados.", required = false, schema = @Schema(type = SchemaType.INTEGER)) @QueryParam("size") @DefaultValue("10") int size) {
+		logger.info("Listando pagamentos: index={} size={}", index, size);
 		return pagamentoService.listar(Page.of(index, size)).stream().map(PagamentoEndpoint::toPagamentoResponse);
 	}
 
@@ -59,6 +64,7 @@ public class PagamentoEndpoint {
 	@APIResponses(value = { @APIResponse(responseCode = "400", description = "Erro na requisição."),
 			@APIResponse(responseCode = "200", description = "Pagamento criado com sucesso!", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = PagamentoResponse.class))) })
 	public Uni<PagamentoResponse> novoPagamento(@Valid CriarPagamentoRequest request) {
+		logger.info("Criando pagamento: request={}", request);
 		return pagamentoService.criar(request.getValor(), request.getIdPagador(), request.getIdRecebedor()).onItem()
 				.transform(PagamentoEndpoint::toPagamentoResponse);
 	}

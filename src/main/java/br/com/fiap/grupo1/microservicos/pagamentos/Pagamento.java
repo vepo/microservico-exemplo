@@ -96,7 +96,7 @@ public class Pagamento extends PanacheEntityBase {
 
 	@Override
 	public String toString() {
-		return String.format("Pagamento [id=%d, idPagador=%d, idRecebedor=%d, valor=%f, timestamp=%d]", this.id,
+		return String.format("Pagamento [id=%d, idPagador=%d, idRecebedor=%d, valor=%f, timestamp=%s]", this.id,
 				this.idPagador, this.idRecebedor, this.valor, this.timestamp);
 	}
 }
