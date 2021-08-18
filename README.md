@@ -1,5 +1,7 @@
 # Exemplo de Microserviços
 
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=bugs)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=sqale_index)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo)
+
 Trabalho do Grupo 1 FIAP 4ASOO 
 
 * Bruno Ribeiro Santiago - brunorsantiago_at_gmail.com
@@ -73,6 +75,8 @@ Para acessar os testes no Postman, use o link: https://www.getpostman.com/collec
 
 Esse exemplo não consta com:
 
-* Testes unitários
-* Testes de integração
-* Serviço de mensageria
+* Testes unitários (JUnit 5)
+* Testes de integração (Testcontainers)
+* Configurar Cobertura de Testes (JaCoCo)
+* Configurar CI/CD
+* Serviço de Mensageria
