@@ -91,3 +91,9 @@ Esse sistema não divide as camadas usando pacotes, os pacotes são a representa
 | Repository | Implementado pelo Panache, encapsulado pelas classes de Dominio |
 | Service | PagamentoService |
 | Controller | PagamentoEndpoint, CriarPagamentoRequest, PagamentoResponse |
+
+## Criar imagem Docker
+
+```bash
+mvn clean package -Dquarkus.container-image.build=true
+```
