@@ -80,3 +80,14 @@ Esse exemplo não consta com:
 * Configurar Cobertura de Testes (JaCoCo)
 * Configurar CI/CD
 * Serviço de Mensageria
+
+## Separação de Camadas
+
+Esse sistema não divide as camadas usando pacotes, os pacotes são a representação de unidades lógicas contendo todas as camadas. Para esse exemplo apenas implementamos Pagamentos e Perfil, o modelo do dominio não é o melhor, é apenas demonstrativo.
+
+| Camadas | Classes |
+|---------|---------|
+| Domain | Perfil, Pagamento |
+| Repository | Implementado pelo Panache, encapsulado pelas classes de Dominio |
+| Service | PagamentoService |
+| Controller | PagamentoEndpoint, CriarPagamentoRequest, PagamentoResponse |

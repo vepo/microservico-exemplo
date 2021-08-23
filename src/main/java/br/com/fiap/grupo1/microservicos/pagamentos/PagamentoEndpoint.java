@@ -8,6 +8,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -31,7 +32,7 @@ import io.smallrye.mutiny.Uni;
 public class PagamentoEndpoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(PagamentoEndpoint.class);
-	
+
 	@Inject
 	PagamentoService pagamentoService;
 
@@ -42,6 +43,7 @@ public class PagamentoEndpoint {
 		response.setIdRecebedor(pagamento.getIdRecebedor());
 		response.setTimestamp(pagamento.getTimestamp().getTime());
 		response.setValor(pagamento.getValor());
+		response.setStatus(pagamento.getStatus());
 		return response;
 	}
 
@@ -55,6 +57,14 @@ public class PagamentoEndpoint {
 			@Parameter(description = "Tamanho da página de resultados.", required = false, schema = @Schema(type = SchemaType.INTEGER)) @QueryParam("size") @DefaultValue("10") int size) {
 		logger.info("Listando pagamentos: index={} size={}", index, size);
 		return pagamentoService.listar(Page.of(index, size)).stream().map(PagamentoEndpoint::toPagamentoResponse);
+	}
+
+	@GET
+	@PathParam("{idPagamento}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Uni<PagamentoResponse> encontraPagamento(@PathParam("idPagamento") Long pagamentoId) {
+		logger.info("Encontrando pagamento: id={}", pagamentoId);
+		return pagamentoService.encontra(pagamentoId).map(PagamentoEndpoint::toPagamentoResponse);
 	}
 
 	@PUT

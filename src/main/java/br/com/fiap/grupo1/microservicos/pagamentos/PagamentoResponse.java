@@ -9,18 +9,20 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 public class PagamentoResponse {
 	@Schema(description = "Identificador único do pagamento")
 	private Long id;
-	
+
 	@Schema(description = "Valor registrado do pagamento")
 	private BigDecimal valor;
-	
+
 	@Schema(description = "Indentificador do pagador")
 	private Long idPagador;
-	
+
 	@Schema(description = "Indentificador do recebedor")
 	private Long idRecebedor;
-	
+
 	@Schema(description = "Timestamp de confirmação da operação")
 	private long timestamp;
+
+	private Status status;
 
 	public Long getId() {
 		return id;
@@ -62,9 +64,17 @@ public class PagamentoResponse {
 		this.timestamp = timestamp;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, idPagador, idRecebedor, timestamp, valor);
+		return Objects.hash(id, idPagador, idRecebedor, timestamp, valor, status);
 	}
 
 	@Override
@@ -81,13 +91,14 @@ public class PagamentoResponse {
 		PagamentoResponse other = (PagamentoResponse) obj;
 		return Objects.equals(id, other.id) && Objects.equals(idPagador, other.idPagador)
 				&& Objects.equals(idRecebedor, other.idRecebedor) && Objects.equals(timestamp, other.timestamp)
-				&& Objects.equals(valor, other.valor);
+				&& Objects.equals(valor, other.valor) && Objects.equals(status, other.status);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("PagamentoResponse [id=%s, valor=%s, idPagador=%s, idRecebedor=%s, timestamp=%s]", id,
-				valor, idPagador, idRecebedor, timestamp);
+		return String.format(
+				"PagamentoResponse [id=%s, valor=%s, idPagador=%s, idRecebedor=%s, status=%s, timestamp=%s]", id, valor,
+				idPagador, idRecebedor, status, timestamp);
 	}
 
 }
