@@ -95,6 +95,8 @@ Esse sistema não divide as camadas usando pacotes, os pacotes são a representa
 | Service | PagamentoService |
 | Controller | PagamentoEndpoint, CriarPagamentoRequest, PagamentoResponse |
 
+As validações do Controller são implementadas na modelagem dos dados `CriarPagamentoRequest` e `PagamentoResponse` usando Jakarta Bean Validation.
+
 ## Criar imagem Docker
 
 ```bash
