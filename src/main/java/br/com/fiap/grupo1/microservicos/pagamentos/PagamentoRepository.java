@@ -18,7 +18,7 @@ public class PagamentoRepository implements PanacheRepository<Pagamento> {
 		return findAll(Sort.by("timestamp"));
 	}
 
-	private static long DIA_EM_MILLIS = 1000 * 60 * 60 * 24;
+	private static long DIA_EM_MILLIS = 1000L * 60L * 60L * 24L;
 
 	public Uni<List<Pagamento>> efetuadosRecentemente(Long idPagador) {
 		return pagamentosRecentemente(idPagador, Status.EFETUADO);
