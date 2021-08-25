@@ -1,4 +1,4 @@
-package br.com.fiap.grupo1.microservicos.perfil;
+package br.com.fiap.grupo1.microservicos.pagamentos;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -8,12 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
-import io.smallrye.mutiny.Uni;
-
 @Entity
-@Table(name = "tb_pagamento_perfis")
-public class Perfil extends PanacheEntityBase {
+@Table(name = "tb_pagamento_configuracao")
+public class ConfiguracaoPagamentos {
 
 	@Id
 	@Column(name = "id_pagador", nullable = false)
@@ -22,10 +19,10 @@ public class Perfil extends PanacheEntityBase {
 	@Column(nullable = false)
 	private BigDecimal maximoDiario;
 
-	public Perfil() {
+	public ConfiguracaoPagamentos() {
 	}
 
-	public Perfil(Long idPagador, BigDecimal maximoDiario) {
+	public ConfiguracaoPagamentos(Long idPagador, BigDecimal maximoDiario) {
 		this.idPagador = idPagador;
 		this.maximoDiario = maximoDiario;
 	}
@@ -59,17 +56,13 @@ public class Perfil extends PanacheEntityBase {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Perfil other = (Perfil) obj;
+		ConfiguracaoPagamentos other = (ConfiguracaoPagamentos) obj;
 		return Objects.equals(idPagador, other.idPagador) && Objects.equals(maximoDiario, other.maximoDiario);
 	}
 
 	@Override
 	public String toString() {
 		return String.format("Perfil [idPagador=%s, maximoDiario=%s]", idPagador, maximoDiario);
-	}
-
-	public static Uni<Perfil> id(Long idPagador) {
-		return findById(idPagador);
 	}
 
 }

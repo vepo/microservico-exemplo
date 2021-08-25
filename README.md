@@ -97,3 +97,24 @@ Esse sistema não divide as camadas usando pacotes, os pacotes são a representa
 ```bash
 mvn clean package -Dquarkus.container-image.build=true
 ```
+
+## Observabilidade
+
+As métricas podem ser coletadas usando http://localhost:8080/q/metrics e podem ser consultadas usando o [Prometheus](https://prometheus.io/docs/introduction/overview/) ou qualquer serviço de monitoramento em cloud (como o CloudWatch).
+
+```
+# HELP http_server_requests_seconds  
+# TYPE http_server_requests_seconds summary
+http_server_requests_seconds_count{method="GET",outcome="SUCCESS",status="200",uri="/pagamento",} 3.0
+http_server_requests_seconds_sum{method="GET",outcome="SUCCESS",status="200",uri="/pagamento",} 3.1490952
+http_server_requests_seconds_count{method="GET",outcome="SUCCESS",status="200",uri="/pagamento/perfil/{idPagador}",} 5.0
+http_server_requests_seconds_sum{method="GET",outcome="SUCCESS",status="200",uri="/pagamento/perfil/{idPagador}",} 0.2202462
+http_server_requests_seconds_count{method="PUT",outcome="SUCCESS",status="200",uri="/pagamento",} 10.0
+http_server_requests_seconds_sum{method="PUT",outcome="SUCCESS",status="200",uri="/pagamento",} 0.3782745
+```
+
+## Documentação
+
+A documentação da API é gerada automáticamente e pode ser acessa pelas interfaces [web](http://localhost:8080/q/swagger-ui/#/) ou [YAML](http://localhost:8080/q/openapi).
+
+![Interface web com Swagger](/recursos/swagger.png)

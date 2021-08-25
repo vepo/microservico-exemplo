@@ -4,17 +4,16 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import br.com.fiap.grupo1.microservicos.perfil.Perfil;
-import io.quarkus.hibernate.reactive.panache.Panache;
-import io.quarkus.hibernate.reactive.panache.PanacheQuery;
 import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.quarkus.panache.common.Page;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
@@ -23,34 +22,51 @@ public class PagamentoService {
 	@ConfigProperty(name = "limite.diario")
 	int defaultLimiteDiario;
 
-	public PanacheQuery<Pagamento> listar(Page page) {
-		return Pagamento.todos().page(page);
-	}
+	@Inject
+	PagamentoRepository pagamentoRepository;
+
+	@Inject
+	ConfiguracaoPagamentosRepository perfilRepository;
 
 	@ReactiveTransactional
 	public Uni<Pagamento> criar(BigDecimal valor, Long idPagador, Long idRecebedor) {
-		return Perfil.id(idPagador).onItem().transformToUni(perfil -> Pagamento.efetuadosRecentemente(idPagador)
-				.onItem().transformToUni(entity -> Panache.withTransaction(() -> {
-					var pagamentosEfetuados = (BigDecimal) ((List<?>) entity).stream()
-							.map(value -> ((Pagamento) value).getValor())
-							.collect(Collectors.reducing(BigDecimal.ZERO, (a, b) -> a.add(b)));
-					var maximoDiario = perfil != null ? ((Perfil) perfil).getMaximoDiario()
-							: new BigDecimal(defaultLimiteDiario);
-					var pagamento = new Pagamento();
-					pagamento.setValor(valor);
-					pagamento.setIdPagador(idPagador);
-					pagamento.setIdRecebedor(idRecebedor);
-					if (maximoDiario.subtract(pagamentosEfetuados).subtract(valor).doubleValue() > 0) {
-						pagamento.setStatus(Status.AGUARDANDO);
-					} else {
-						pagamento.setStatus(Status.REJEITADO_LIMITE_DIARIO);
-					}
-					pagamento.setTimestamp(Timestamp.from(Instant.now()));
-					return pagamento.persistAndFlush();
-				})));
+		return Uni.combine().all()
+				.unis(perfilRepository.comIdPagador(idPagador), pagamentoRepository.efetuadosRecentemente(idPagador))
+				.combinedWith((perfil, pagamentosRecentes) -> criarPagamento(pagamentosRecentes, perfil, valor,
+						idPagador, idRecebedor))
+				.flatMap(this::salvarPagamento);
 	}
 
-	public Uni<Pagamento> encontra(Long pagamentoId) {
-		return Pagamento.id(pagamentoId);
+	@Transactional
+	private Uni<Pagamento> salvarPagamento(Pagamento pagamento) {
+		return pagamentoRepository.persistAndFlush(pagamento);
 	}
+
+	private Pagamento criarPagamento(List<Pagamento> pagamentosRecentes, ConfiguracaoPagamentos perfil,
+			BigDecimal valor, Long idPagador, Long idRecebedor) {
+		var valorUsadoRecentemente = (BigDecimal) pagamentosRecentes.stream().map(Pagamento::getValor)
+				.collect(Pagamento.somaBigDecima());
+		var maximoDiario = perfil != null ? ((ConfiguracaoPagamentos) perfil).getMaximoDiario()
+				: new BigDecimal(defaultLimiteDiario);
+		var pagamento = new Pagamento();
+		pagamento.setValor(valor);
+		pagamento.setIdPagador(idPagador);
+		pagamento.setIdRecebedor(idRecebedor);
+		if (maximoDiario.subtract(valorUsadoRecentemente).subtract(valor).doubleValue() > 0) {
+			pagamento.setStatus(Status.AGUARDANDO);
+		} else {
+			pagamento.setStatus(Status.REJEITADO_LIMITE_DIARIO);
+		}
+		pagamento.setTimestamp(Timestamp.from(Instant.now()));
+		return pagamento;
+	}
+
+	public Multi<Pagamento> listar(int index, int size) {
+		return pagamentoRepository.todos().page(Page.of(index, size)).stream();
+	}
+
+	public Uni<Pagamento> pagamentoPorId(Long pagamentoId) {
+		return pagamentoRepository.findById(pagamentoId);
+	}
+
 }

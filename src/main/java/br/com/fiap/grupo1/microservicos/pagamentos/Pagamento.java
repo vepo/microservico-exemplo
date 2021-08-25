@@ -2,10 +2,9 @@ package br.com.fiap.grupo1.microservicos.pagamentos;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,14 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
-import io.quarkus.hibernate.reactive.panache.PanacheQuery;
-import io.quarkus.panache.common.Sort;
-import io.smallrye.mutiny.Uni;
-
 @Entity
 @Table(name = "tb_pagamentos")
-public class Pagamento extends PanacheEntityBase {
+public class Pagamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -120,18 +114,9 @@ public class Pagamento extends PanacheEntityBase {
 				this.id, this.idPagador, this.idRecebedor, this.valor, this.status, this.timestamp);
 	}
 
-	public static PanacheQuery<Pagamento> todos() {
-		return findAll(Sort.by("timestamp"));
+	@SuppressWarnings("unchecked")
+	public static Collector<BigDecimal, BigDecimal, BigDecimal> somaBigDecima() {
+		return (Collector<BigDecimal, BigDecimal, BigDecimal>) Collectors.reducing(BigDecimal.ZERO, (a, b) -> a.add(b));
 	}
 
-	private static long DIA_EM_MILLIS = 1000 * 60 * 60 * 24;
-
-	public static Uni<List<PanacheEntityBase>> efetuadosRecentemente(Long idPagador) {
-		return find("FROM Pagamento pag WHERE pag.timestamp > ?1 AND pag.idPagador = ?2 AND pag.status = ?3",
-				Date.from(Instant.now().minusMillis(DIA_EM_MILLIS)), idPagador, Status.EFETUADO).list();
-	}
-
-	public static Uni<Pagamento> id(Long pagamentoId) {
-		return findById(pagamentoId);
-	}
 }

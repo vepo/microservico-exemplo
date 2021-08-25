@@ -23,7 +23,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.quarkus.panache.common.Page;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -37,7 +38,7 @@ public class PagamentoEndpoint {
 	PagamentoService pagamentoService;
 
 	private static PagamentoResponse toPagamentoResponse(Pagamento pagamento) {
-		PagamentoResponse response = new PagamentoResponse();
+		var response = new PagamentoResponse();
 		response.setId(pagamento.getId());
 		response.setIdPagador(pagamento.getIdPagador());
 		response.setIdRecebedor(pagamento.getIdRecebedor());
@@ -48,6 +49,8 @@ public class PagamentoEndpoint {
 	}
 
 	@GET
+	@Counted
+	@Timed
 	@Produces(MediaType.APPLICATION_JSON)
 	@Operation(summary = "Lista todas as operações de pagamento", description = "Retorna todas operações de pagamentos ordenadas por tempo. Operação paginada.")
 	@APIResponses(value = {
@@ -56,18 +59,22 @@ public class PagamentoEndpoint {
 			@Parameter(description = "Índice da página de resultados.", required = false, schema = @Schema(type = SchemaType.INTEGER)) @QueryParam("index") @DefaultValue("0") int index,
 			@Parameter(description = "Tamanho da página de resultados.", required = false, schema = @Schema(type = SchemaType.INTEGER)) @QueryParam("size") @DefaultValue("10") int size) {
 		logger.info("Listando pagamentos: index={} size={}", index, size);
-		return pagamentoService.listar(Page.of(index, size)).stream().map(PagamentoEndpoint::toPagamentoResponse);
+		return pagamentoService.listar(index, size).map(PagamentoEndpoint::toPagamentoResponse);
 	}
 
 	@GET
-	@PathParam("{idPagamento}")
+	@Counted
+	@Timed
+	@PathParam("/{idPagamento}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Uni<PagamentoResponse> encontraPagamento(@PathParam("idPagamento") Long pagamentoId) {
+	public Uni<PagamentoResponse> retornarPagamento(@PathParam("idPagamento") Long pagamentoId) {
 		logger.info("Encontrando pagamento: id={}", pagamentoId);
-		return pagamentoService.encontra(pagamentoId).map(PagamentoEndpoint::toPagamentoResponse);
+		return pagamentoService.pagamentoPorId(pagamentoId).onItem().transform(PagamentoEndpoint::toPagamentoResponse);
 	}
 
 	@PUT
+	@Counted
+	@Timed
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Operation(summary = "Cria novo pagamento.", description = "Cria novo pagamento.")
