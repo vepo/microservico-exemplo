@@ -44,10 +44,9 @@ public class PagamentoService {
 
 	private Pagamento criarPagamento(List<Pagamento> pagamentosRecentes, ConfiguracaoPagamentos perfil,
 			BigDecimal valor, Long idPagador, Long idRecebedor) {
-		var valorUsadoRecentemente = (BigDecimal) pagamentosRecentes.stream().map(Pagamento::getValor)
+		var valorUsadoRecentemente = pagamentosRecentes.stream().map(Pagamento::getValor)
 				.collect(Pagamento.somaBigDecima());
-		var maximoDiario = perfil != null ? ((ConfiguracaoPagamentos) perfil).getMaximoDiario()
-				: new BigDecimal(defaultLimiteDiario);
+		var maximoDiario = perfil != null ? perfil.getMaximoDiario() : new BigDecimal(defaultLimiteDiario);
 		var pagamento = new Pagamento();
 		pagamento.setValor(valor);
 		pagamento.setIdPagador(idPagador);

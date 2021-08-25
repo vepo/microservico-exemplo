@@ -58,6 +58,6 @@ public class PerfilService {
 	}
 
 	private BigDecimal valorTotal(Stream<Pagamento> pagamentos) {
-		return (BigDecimal) pagamentos.map(Pagamento::getValor).collect(Pagamento.somaBigDecima());
+		return pagamentos.map(Pagamento::getValor).collect(Pagamento.somaBigDecima());
 	}
 }

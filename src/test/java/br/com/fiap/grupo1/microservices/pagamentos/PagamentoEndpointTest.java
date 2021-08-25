@@ -45,13 +45,13 @@ public class PagamentoEndpointTest {
 
 	@Test
 	@DisplayName("Listar todos")
-	public void listarPagamentosTest() {
+	void listarPagamentosTest() {
 		given().when().get("/pagamento").then().statusCode(200).body("$.size()", equalTo(0));
 	}
 
 	@Test
 	@DisplayName("Criar Pagamento")
-	public void criarPagamentoTest() {
+	void criarPagamentoTest() {
 		given().accept(ContentType.JSON).contentType(ContentType.JSON)
 				.body(new CriarPagamentoRequest(BigDecimal.valueOf(2.5), 222L, 111L)).put("/pagamento").then()
 				.assertThat().statusCode(200);
