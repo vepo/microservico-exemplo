@@ -19,6 +19,9 @@ Para base de dados, escolhemos o [PostgreSQL](https://www.postgresql.org/) por s
 
 * Maven
 * Java 11
+* Quarkus
+* JPA + Panache
+* Jakarta Bean Validation
 * Docker
 
 ## Execução
