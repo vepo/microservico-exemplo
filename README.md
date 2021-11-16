@@ -2,13 +2,6 @@
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=bugs)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vepo_microservico-exemplo&metric=sqale_index)](https://sonarcloud.io/dashboard?id=vepo_microservico-exemplo)
 
-Trabalho do Grupo 1 FIAP 4ASOO 
-
-* Bruno Ribeiro Santiago - brunorsantiago_at_gmail.com
-* Rogério Alves Cunha - rogerio.cunha_at_conductor.com.br
-* Victor Emanuel Perticarrari Osório - victor.perticarrari_at_gmail.com
-* Vitor Barbosa Paiva - paiva.vb_at_gmail.com
-
 ## Escolhas Arquiteturais
 
 Para desenvolver esse exemplo de microservices, vamos escolhoer o Framework [Quarkus.io](https://quarkus.io/) por ser um framework que segue especificações abertas, com facilidade de se criar plugins e bibliotecas, com baixo uso de mémoria e otimizado para serviços Cloud/Kubernetes Native.
